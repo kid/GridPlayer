@@ -9,6 +9,8 @@ namespace Gr1d.KidPaddle
     {
         private IDeck deck;
 
+        public string Clan { get { return this.deck.Endpoint.Clan; } }
+
         public void Initialise(IDeck deck)
         {
             this.deck = deck;
@@ -17,7 +19,11 @@ namespace Gr1d.KidPaddle
 
         public void OnArrived(IAgentInfo arriver, IAgentUpdateInfo agentUpdate)
         {
-            this.Attack(arriver);
+            if (this.Clan != arriver.Clan)
+            {
+                this.Attack(arriver);
+            }
+
         }
 
         public void OnAttacked(IAgentInfo attacker, IAgentUpdateInfo agentUpdate)
@@ -38,7 +44,7 @@ namespace Gr1d.KidPaddle
                 this.Claim(currentNode);
             }
 
-            var opponent = currentNode.OpposingAgents.FirstOrDefault();
+            var opponent = currentNode.OpposingAgents.FirstOrDefault(_ => _.Clan != this.Clan);
             if (opponent != null)
             {
                 this.Attack(opponent);
